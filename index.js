@@ -24,16 +24,33 @@ http.listen(port, () => {
 })
 
 let players = 0;
+let playerOne;
+let playerTwo;
 
 io.on('connection', (socket) => {
   players++;
-  console.log(`Player ${players} connected`);
-  socket.broadcast.emit('newPlayer');
+  console.log(`Player ${players} connected with id: ${socket.id}`);
+
+  if (players === 1) playerOne = socket.id;
+  if (players === 2) {
+    playerTwo = socket.id;
+    io.to(playerOne).emit('newPlayer');
+  }
+
+  socket.on('currentState', (state) => {
+    if (playerOne === socket.id) {
+      io.to(playerTwo).emit('currentState', state)
+    } else {
+      io.to(playerOne).emit('currentState', state)
+    }
+  })
 
   socket.on('disconnect', () => {
     console.log(`Player ${players} disconnected`);
+    players--
   });
 
 });
+
 
 

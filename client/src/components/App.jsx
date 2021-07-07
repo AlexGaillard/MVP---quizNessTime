@@ -5,14 +5,16 @@ var socket = socketClient (SERVER);
 import Question from './Question.jsx';
 import Scoreboard from './Scoreboard.jsx';
 import axios from 'axios';
-socket.on('newPlayer', () => {
-  alert('a new player has joined')
-})
+// socket.on('newPlayer', (arg) => {
+//   alert(arg)
+// })
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      newGame: false,
+      alreadyRun: false,
       questions: [],
       currentRound: 0,
       currentQuestion: {},
@@ -31,21 +33,26 @@ class App extends React.Component {
     }
   }
 
-  componentDidMount() {
-
-    let playerOne = prompt("Please enter your name Player 1");
-    let playerTwo = prompt("Please enter your name Player 2");
+  newGame() {
 
     axios.get('/questions')
     .then((res) => {
       this.setState({
         questions: res.data,
-        playerOne: playerOne,
-        playerTwo: playerTwo
       });
       this.loadQuestion();
     });
 
+  }
+
+  componentDidMount() {
+    let playerOne = prompt("Please enter your name Player 1");
+    let playerTwo = prompt("Please enter your name Player 2");
+
+    this.setState({
+      playerOne: playerOne,
+      playerTwo: playerTwo
+    })
   }
 
   loadQuestion() {
@@ -55,6 +62,8 @@ class App extends React.Component {
       currentQuestion: this.state.questions[round - 1],
       correctAnswer: this.state.questions[round - 1].correct_answer
     });
+
+    socket.emit('currentState', this.state);
   }
 
   checkAnswer() {
@@ -114,6 +123,7 @@ class App extends React.Component {
           statusMessage: '',
           playerTurn: 2
         })
+        socket.emit('currentState', this.state);
       } else {
         new Promise((resolve, reject) => {
           this.setState({
@@ -147,6 +157,19 @@ class App extends React.Component {
   }
 
   render() {
+
+    socket.on('currentState', (state) => {
+      this.setState(state)
+    })
+
+    socket.on('newPlayer', (arg) => {
+      this.setState({newGame: true})
+    })
+
+    if (this.state.newGame && !this.state.alreadyRun) {
+      this.setState({alreadyRun: true})
+      this.newGame();
+    }
 
     return(
       <div>
