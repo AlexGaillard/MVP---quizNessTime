@@ -1,10 +1,16 @@
 import React from 'react';
 
-const Question = ({ currentQuestion, currentRound, checkAnswer}) => {
+const Question = ({ currentQuestion, currentRound, endRound}) => {
 
-  let category = currentQuestion.category;
-  let questionBody = currentQuestion.question;
-  let answers = [];
+  const convertText = (conversionText) => {
+    conversionText = conversionText.replace(/&quot;/g, '\"');
+    conversionText = conversionText.replace(/&#039;/g, '\'');
+    conversionText = conversionText.replace(/&aacute;/g, '\á');
+    conversionText = conversionText.replace(/&uuml;/g, '\Ü');
+    conversionText = conversionText.replace(/&rsquo;/g, '\'');
+    conversionText = conversionText.replace(/&eacute/g, '\é');
+    return conversionText;
+  }
 
   const shuffleAnswers = () => {
     answers.push(currentQuestion.correct_answer);
@@ -22,16 +28,22 @@ const Question = ({ currentQuestion, currentRound, checkAnswer}) => {
     };
   };
 
+  let category = currentQuestion.category;
+  let questionBody = currentQuestion.question;
+  let answers = [];
+
   shuffleAnswers();
 
   return(
     <div id='question-box'>
-      <h3>Question {currentRound || 1} </h3>
-      <h4>Category: {category} </h4>
-      <p>{questionBody}</p>
-      <ul>
-        { answers.map((answer) => <li onClick={checkAnswer}>{ answer }</li>)}
-      </ul>
+      <div>
+        <h3>Question {currentRound || 1} </h3>
+        <h4>Category: {category} </h4>
+        <p>{convertText(questionBody)}</p>
+        <ul>
+          { answers.map((answer) => <li onClick={endRound} key={answer}>{ convertText(answer) }</li>)}
+        </ul>
+      </div>
     </div>
   );
 };
