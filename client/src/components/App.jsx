@@ -1,8 +1,13 @@
 import React from 'react';
+import socketClient  from "socket.io-client";
+const SERVER = "http://localhost:3000";
+var socket = socketClient (SERVER);
 import Question from './Question.jsx';
 import Scoreboard from './Scoreboard.jsx';
 import axios from 'axios';
-// const Promise = require('bluebird');
+socket.on('newPlayer', () => {
+  alert('a new player has joined')
+})
 
 class App extends React.Component {
   constructor(props) {
@@ -24,10 +29,10 @@ class App extends React.Component {
       gameOver: false,
       winner: ''
     }
-
   }
 
   componentDidMount() {
+
     let playerOne = prompt("Please enter your name Player 1");
     let playerTwo = prompt("Please enter your name Player 2");
 
@@ -40,6 +45,7 @@ class App extends React.Component {
       });
       this.loadQuestion();
     });
+
   }
 
   loadQuestion() {
@@ -141,6 +147,7 @@ class App extends React.Component {
   }
 
   render() {
+
     return(
       <div>
 
