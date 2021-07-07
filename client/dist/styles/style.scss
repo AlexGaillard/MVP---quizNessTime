@@ -7,7 +7,7 @@ body {
   #question-box {
     display: flex;
     text-align: center;
-    background-color:red;
+    border: 1px solid black;
     height: 300px;
     width: 500px;
     padding: 2em;
@@ -63,5 +63,10 @@ body {
       grid-row: 3;
     }
   }
+
+  #status {
+    text-align: center;
+  }
+
 }
 

@@ -2,6 +2,7 @@ import React from 'react';
 import Question from './Question.jsx';
 import Scoreboard from './Scoreboard.jsx';
 import axios from 'axios';
+// const Promise = require('bluebird');
 
 class App extends React.Component {
   constructor(props) {
@@ -14,12 +15,14 @@ class App extends React.Component {
       playerTwoScore: 0,
       statusMessage: '',
       correctAnswer: '',
+      previousAnswer: '',
       playerOne: '',
       playerTwo: '',
       playerTurn: 1,
       playerOneGuess: '',
       playerTwoGuess: '',
-      gameOver: false
+      gameOver: false,
+      winner: ''
     }
 
   }
@@ -50,40 +53,41 @@ class App extends React.Component {
 
   checkAnswer() {
     let correctAnswer = this.state.correctAnswer;
-    alert(this.state.playerOneGuess)
-    alert(this.state.playerTwoGuess)
-    alert(this.state.correctAnswer)
     if (this.state.playerOneGuess === correctAnswer && this.state.playerTwoGuess === correctAnswer) {
       this.setState({
         playerOneScore: this.state.playerOneScore + 1,
         playerTwoScore: this.state.playerTwoScore + 1,
         statusMessage: `Both players guessed correctly!`,
         correctAnswer: '',
-        // playerOneGuess: '',
-        // playerTwoGuess: '',
+        previousAnswer: correctAnswer,
+        playerOneGuess: '',
+        playerTwoGuess: '',
       })
     } else if (this.state.playerOneGuess === correctAnswer && this.state.playerTwoGuess !== correctAnswer) {
       this.setState({
         playerOneScore: this.state.playerOneScore + 1,
         statusMessage: `${this.state.playerOne} guessed correctly!`,
         correctAnswer: '',
-        // playerOneGuess: '',
-        // playerTwoGuess: '',
+        previousAnswer: correctAnswer,
+        playerOneGuess: '',
+        playerTwoGuess: '',
       })
     } else if (this.state.playerOneGuess !== correctAnswer && this.state.playerTwoGuess === correctAnswer) {
       this.setState({
         playerTwoScore: this.state.playerTwoScore + 1,
         statusMessage: `${this.state.playerTwo} guessed correctly!`,
         correctAnswer: '',
-        // playerOneGuess: '',
-        // playerTwoGuess: '',
+        previousAnswer: correctAnswer,
+        playerOneGuess: '',
+        playerTwoGuess: '',
       })
     } else {
       this.setState({
         statusMessage: 'Neither player guessed correctly!',
         correctAnswer: '',
-        // playerOneGuess: '',
-        // playerTwoGuess: '',
+        previousAnswer: correctAnswer,
+        playerOneGuess: '',
+        playerTwoGuess: '',
       })
     }
 
@@ -91,19 +95,30 @@ class App extends React.Component {
   }
 
   endRound(e) {
+
+    let playerGuess;
+
+    if (e) playerGuess = e.target.innerText
+    else playerGuess = '';
+
     if (this.state.currentRound !== 10) {
       if (this.state.playerTurn === 1) {
         this.setState({
-          playerOneGuess: e.target.innerText,
+          playerOneGuess: playerGuess,
           statusMessage: '',
           playerTurn: 2
         })
       } else {
-        this.setState({
-          playerTwoGuess: e.target.innerText,
-          playerTurn: 1
+        new Promise((resolve, reject) => {
+          this.setState({
+            playerTwoGuess: playerGuess,
+            playerTurn: 1
+          })
+          resolve();
         })
-        this.checkAnswer(e);
+        .then(() => {
+          this.checkAnswer();
+        })
       }
     } else {
       this.endGame();
@@ -116,19 +131,32 @@ class App extends React.Component {
       statusMessage: 'GAME OVER',
       correctAnswer: ''
     });
+
+    if (this.state.playerOneScore > this.state.playerTwoScore) {
+      this.setState({winner: this.state.playerOne});
+    } else {
+      this.setState({winner: this.state.playerTwo});
+    }
+
   }
 
   render() {
     return(
       <div>
-      {this.state.currentQuestion.question &&
-      <Question currentQuestion={this.state.currentQuestion} currentRound={this.state.currentRound} endRound={this.endRound.bind(this)} />}
 
-      {this.state.currentQuestion.question &&
-      <Scoreboard playerOneScore={this.state.playerOneScore} playerTwoScore={this.state.playerTwoScore} statusMessage={this.state.statusMessage} playerOne={this.state.playerOne} playerTwo={this.state.playerTwo} correctAnswer={this.state.correctAnswer} endRound={this.endRound.bind(this)} currentRound={this.state.currentRound} gameOver={this.state.gameOver} endGame={this.endGame.bind(this)}/>
-      }
+        {this.state.currentQuestion.question &&
+        <Question currentQuestion={this.state.currentQuestion} currentRound={this.state.currentRound} endRound={this.endRound.bind(this)} />}
 
-      { this.state.playerTurn === 1 ? <h3>It is {this.state.playerOne}'s turn to play</h3> : <h3>It is {this.state.playerTwo}'s turn to play</h3> }
+        {this.state.currentQuestion.question &&
+        <Scoreboard playerOneScore={this.state.playerOneScore} playerTwoScore={this.state.playerTwoScore} statusMessage={this.state.statusMessage} playerOne={this.state.playerOne} playerTwo={this.state.playerTwo} previousAnswer={this.state.previousAnswer} endRound={this.endRound.bind(this)} currentRound={this.state.currentRound} gameOver={this.state.gameOver} endGame={this.endGame.bind(this)}/>
+        }
+
+        <div id="status">
+          { this.state.playerTurn === 1 && this.state.gameOver === false ? <h3>It is {this.state.playerOne}'s turn to play</h3> : this.state.playerTurn === 2 && this.state.gameOver === false ? <h3>It is {this.state.playerTwo}'s turn to play</h3> : '' }
+
+          { this.state.gameOver && <h3>The winner is {this.state.winner}</h3> }
+        </div>
+
 
       </div>
     )

@@ -1,7 +1,7 @@
 import React from 'react';
 import Timer from './Timer.jsx';
 
-const Scoreboard = ({ playerOneScore, playerTwoScore, statusMessage, playerOne, playerTwo, correctAnswer, endRound, currentRound, gameOver, endGame }) => {
+const Scoreboard = ({ playerOneScore, playerTwoScore, statusMessage, playerOne, playerTwo, previousAnswer, endRound, currentRound, gameOver, endGame }) => {
   return(
     <>
     <div id="scoreboard">
@@ -16,7 +16,7 @@ const Scoreboard = ({ playerOneScore, playerTwoScore, statusMessage, playerOne, 
       </div>
       <div>
         <h2>{statusMessage}</h2>
-        {correctAnswer && <h3>The correct answer is: {correctAnswer}</h3>}
+        {previousAnswer && <h3>The correct answer was: {previousAnswer}</h3>}
       </div>
     </div>
     </>
