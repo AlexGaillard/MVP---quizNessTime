@@ -13,7 +13,7 @@ class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      newGame: false,
+      newGame: true,
       alreadyRun: false,
       questions: [],
       currentRound: 0,
@@ -46,13 +46,13 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    let playerOne = prompt("Please enter your name Player 1");
-    let playerTwo = prompt("Please enter your name Player 2");
+    // let playerOne = prompt("Please enter your name Player 1");
+    // let playerTwo = prompt("Please enter your name Player 2");
 
-    this.setState({
-      playerOne: playerOne,
-      playerTwo: playerTwo
-    })
+    // this.setState({
+    //   playerOne: playerOne,
+    //   playerTwo: playerTwo
+    // })
   }
 
   loadQuestion() {
