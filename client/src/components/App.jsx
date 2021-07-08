@@ -135,6 +135,7 @@ class App extends React.Component {
           this.setState({
             playerOneGuess: playerGuess,
             statusMessage: '',
+            previousAnswer: '',
             playerTurn: 2
           })
           resolve();
