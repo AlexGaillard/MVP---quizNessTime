@@ -26,16 +26,26 @@ http.listen(port, () => {
 let players = 0;
 let playerOne;
 let playerTwo;
+let playerOneName;
 
 io.on('connection', (socket) => {
   players++;
   console.log(`Player ${players} connected with id: ${socket.id}`);
 
+  io.to(socket.id).emit('playerId', players, socket.id);
+
   if (players === 1) playerOne = socket.id;
-  if (players === 2) {
-    playerTwo = socket.id;
-    io.to(playerOne).emit('newPlayer');
-  }
+  if (players === 2) playerTwo = socket.id;
+
+
+  socket.on('setPlayerName', (arg) => {
+    playerOneName = arg;
+  })
+
+  socket.on('readyToPlay', () => {
+    io.to(playerTwo).emit('getPlayerName', playerOneName)
+    socket.emit('startGame');
+  })
 
   socket.on('currentState', (state) => {
     if (playerOne === socket.id) {
@@ -51,6 +61,3 @@ io.on('connection', (socket) => {
   });
 
 });
-
-
-

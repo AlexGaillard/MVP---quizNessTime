@@ -1,0 +1,48 @@
+@import url('https://fonts.googleapis.com/css2?family=Chivo:wght@700&family=Karla&family=Pacifico&display=swap');
+
+html {
+  height: 100%;
+  overflow-y: hidden;
+}
+
+body {
+  font-size: 16px;
+  display: grid;
+  grid-template-rows: 20% 80%;
+  height: 100%;
+  background-image: url("https://products.ls.graphics/paaatterns/images/027-p-1080.png");
+  background-size: cover;
+
+  h2, h3, h4, h5, h6 {
+    font-family: 'Chivo', sans-serif;
+  }
+
+  #title {
+    grid-row: 1;
+    justify-self: center;
+    align-self: center;
+    font-size: 3.2em;
+    color: #f7c700;
+    font-family: 'Pacifico', cursive;
+    text-shadow: 3px 3px 1px rgba(0,0,0,1);;
+  }
+
+  #app {
+    background-color: rgba(255,255,255);
+    border-radius: 10%;
+    box-shadow: 3px 3px 0 1px rgba(0,0,0,0.2);
+    grid-row: 2;
+    margin: auto;
+    font-family: 'Karla', sans-serif;
+
+    #wait {
+      height: 5em;
+      width: 25em;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
+  }
+
+}

@@ -5,11 +5,11 @@ const Scoreboard = ({ playerOneScore, playerTwoScore, statusMessage, playerOne, 
   return(
     <>
     <div id="scoreboard">
-      {!gameOver && <Timer endRound={endRound} currentRound={currentRound} gameOver={gameOver} endGame={endGame} />}
       <div>
         <h2>{playerOne}</h2>
         <h2>{playerOneScore}</h2>
       </div>
+      {<Timer endRound={endRound} currentRound={currentRound} gameOver={gameOver} endGame={endGame} />}
       <div>
         <h2>{playerTwo}</h2>
         <h2>{playerTwoScore}</h2>
