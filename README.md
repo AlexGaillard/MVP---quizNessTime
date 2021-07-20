@@ -1,3 +1,3 @@
 # quizNessTime
 
-A multiplayer quiz game built with React and Socket.io
+A multiplayer quiz game built with React, Node.js and Socket.io
